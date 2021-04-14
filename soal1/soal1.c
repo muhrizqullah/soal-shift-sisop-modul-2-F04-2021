@@ -76,7 +76,7 @@ void hbd(){
     strftime(path, sizeof(path)-1, "%d-%m_%H:%M", &waktu);
     printf("%s_%d\n", path, strcmp(path,"09-04_22:22"));
     if(strcmp(path,"09-04_22:22")==0){
-      char *argv_4[] = {"zip", "-r", "Lopyu_Stevany", pathdir, "-x", "*.c", "*soal1", "*.zip", NULL};
+      char *argv_4[] = {"zip", "-rm", "Lopyu_Stevany", pathdir, "-x", "*.c", "*soal1", "*.zip", NULL};
       execv("/usr/bin/zip", argv_4);
     }
     }

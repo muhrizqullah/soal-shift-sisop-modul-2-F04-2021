@@ -20,17 +20,17 @@ void download(){
 
   if (child_id == 0) {
     // this is child
-    char *argv[3][7] = {    
-    {"/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download", "-O", "Musik_for_Stevany.zip", 0},
-    {"/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download", "-O", "Foto_for_Stevany.zip", 0},
-    {"/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download", "-O", "Film_for_Stevany.zip", 0}};
+   char *argv[3][7] = {    
+    {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download", "-O", "Musik_for_Stevany.zip", 0},
+    {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download", "-O", "Foto_for_Stevany.zip", 0},
+    {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download", "-O", "Film_for_Stevany.zip", 0}};
     for(i = 0; i< 3;i++ ){
       if (0 == fork()){
         while ((wait(&status1)) > 0);
         continue;
       } 
       while ((wait(&status2)) > 0);
-      execve(argv[i][0], &argv[i][0], NULL);
+      execv("/usr/bin/wget", &argv[i][0]);
      
      }
 

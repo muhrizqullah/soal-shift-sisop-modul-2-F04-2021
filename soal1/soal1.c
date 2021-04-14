@@ -5,9 +5,10 @@
 #include <wait.h>
 #include <time.h>
 #include <string.h>
-#include <dirent.h>
 
 char path[20];
+char nama[20];
+int jumfolder=0;
 
 void download(){  
   pid_t child_id;
@@ -20,7 +21,7 @@ void download(){
 
   if (child_id == 0) {
     // this is child
-   char *argv[3][7] = {    
+    char *argv[3][7] = {    
     {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download", "-O", "Musik_for_Stevany.zip", 0},
     {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download", "-O", "Foto_for_Stevany.zip", 0},
     {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download", "-O", "Film_for_Stevany.zip", 0}};
@@ -30,8 +31,7 @@ void download(){
         continue;
       } 
       while ((wait(&status2)) > 0);
-      execv("/usr/bin/wget", &argv[i][0]);
-     
+      execv("/usr/bin/wget", &argv[i][0]);     
      }
 
      char *argv_1[3][5] = {
@@ -76,7 +76,7 @@ void hbd(){
     strftime(path, sizeof(path)-1, "%d-%m_%H:%M", &waktu);
     printf("%s_%d\n", path, strcmp(path,"09-04_22:22"));
     if(strcmp(path,"09-04_22:22")==0){
-      char *argv_4[] = {"zip", "-rm", "Lopyu_Stevany", pathdir, "-x", "*.c", "*soal1", "*.zip", NULL};
+      char *argv_4[] = {"zip", "-rm", "Lopyu_Stevany", ".", "-x", "*.c", "*soal1", "*.zip", NULL};
       execv("/usr/bin/zip", argv_4);
     }
     }

@@ -6,6 +6,11 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <syslog.h>
 
 char pesanChyper[50];
 
@@ -30,11 +35,49 @@ void Chyper(char text[]){
   }
 }
 
-int main() {
+int main(int argc, char** argv)  {
+  int status;
+  if(argc != 2) {
+        printf("Pilih mode\n-x : Menjalankan program, dan menghapus saat selesai\n-z : Stop Program\n");
+        exit(EXIT_SUCCESS);
+  }
 
-//   while(true){
+  FILE* killer;
+  killer = fopen("killer.sh", "w");
+  if(strcmp(argv[1],"-z")==0){
+    fprintf(killer, "#!/bin/bash\nkillall ./soal3\nrm \"$0\"");
+  }else if(strcmp(argv[1],"-x")==0){
+    fprintf(killer, "#!/bin/bash\nkill -9 %d\nrm \"$0\"",(int)getpid());
+  }
+  fclose(killer);
+
+  if(fork()==0){
+    char *argv_1[] = {"chmod", "+w", "killer.sh", NULL};
+    execv("/bin/chmod", argv_1);
+  }
+
+  while(wait(&status) > 0);
+
+  pid_t pid, sid;
+  pid = fork();
+  if (pid < 0) {
+    exit(EXIT_FAILURE);
+  }
+  if (pid > 0) {
+    exit(EXIT_SUCCESS);
+  }
+  umask(0);
+  sid = setsid();
+  if (sid < 0) {
+    exit(EXIT_FAILURE);
+  }
+  close(STDIN_FILENO);
+  close(STDOUT_FILENO);
+  close(STDERR_FILENO);
+
+  while(1){
   char waktusekarang[50],waktusekarang2[50], link[50];
-  int status, status1, status2, i;
+  int status, status1, status2,status3, i;
   time_t t_now = time(NULL);
   struct tm waktu = *localtime(&t_now);
   strftime(waktusekarang, sizeof(waktusekarang)-1, "%Y-%m-%d_%H:%M:%S", &waktu);
@@ -70,15 +113,18 @@ int main() {
     Chyper("Download Success");
     FILE* chy;
     chy = fopen("status.txt", "w");
-    fprintf(chy, pesanChyper);
+    fprintf(chy, "%s", pesanChyper);
     fclose(chy);
     
-    while ((wait(&status)) > 0);
+    while ((wait(&status1)) > 0);
     chdir("..");
     if(fork() == 0){
     char *argv_2[] = {"zip", "-rm", waktusekarang2, waktusekarang2, "status.txt", NULL};
     execv("/usr/bin/zip", argv_2);
     }
-//   sleep(40);
-// }
+
+    while ((wait(&status2)) > 0);
+
+  sleep(40);
+}
 }

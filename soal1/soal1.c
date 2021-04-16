@@ -11,7 +11,6 @@ char path[20];
 
 void filter(){
   int status,status1,status2;
-  printf(" masuk");
     if (0 == fork()) {
     glob_t globbuf_film;
     globbuf_film.gl_offs = 2;
@@ -46,9 +45,38 @@ void filter(){
     while ((wait(&status2)) > 0);
 }
 
+void hbd(){
+  int status,status2;
+  time_t t_now = time(NULL);
+  struct tm waktu = *localtime(&t_now);
+
+  while(strcmp(path,"09-04_22:22") !=0){
+    sleep(2);
+    t_now = time(NULL);
+    waktu = *localtime(&t_now);
+    strftime(path, sizeof(path)-1, "%d-%m_%H:%M", &waktu);
+    }
+
+  pid_t child_id;
+  child_id = fork();
+
+  if (child_id < 0) {
+    exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  } 
+
+  if (child_id == 0) {
+    char *argv_6[] = {"rm","-rf", "MUSIK", "FOTO", "FILM", NULL};
+    execv("/bin/rm", argv_6);
+  } else{
+    while(wait(&status)>0);
+    char *argv_4[] = {"zip", "-rm", "Lopyu_Stevany", ".", "-x", "soal1*", "*.zip", NULL};
+    execv("/bin/zip", argv_4);
+    exit(1);
+  }
+}
 void download(){  
   pid_t child_id;
-  int i,status,status1,status2,status3;
+  int i,status,status1,status2,status3,status4,status5,status6;
   child_id = fork();
 
   if (child_id < 0) {
@@ -68,64 +96,53 @@ void download(){
       } 
       while ((wait(&status2)) > 0);
       execv("/usr/bin/wget", &argv[i][0]);     
-    }
-
-    char *argv_3[] = {"unzip", "*.zip", NULL};
-    execv("/usr/bin/unzip", argv_3);        
+    }         
     }
    else{
     // this is parent
-    while ((wait(&status)) > 0);
-    char *argv_1[3][5] = {
-    {"/bin/mkdir", "-p", "Musyik", 0}, 
-    {"/bin/mkdir", "-p", "Fylm", 0}, 
-    {"/bin/mkdir", "-p", "Pyoto", 0}};
-    for(i = 0; i< 3;i++ ){
-      if (0 == fork()) continue;
-      execve(argv_1[i][0], &argv_1[i][0], NULL);
-     }
     while ((wait(&status3)) > 0);
-    filter();
-    }
-    
-}
+    pid_t child_id1;
+    child_id1 = fork();
 
-void hd(){
-  int status;
-  time_t t_now = time(NULL);
-  struct tm waktu = *localtime(&t_now);
-
-  pid_t child_id;
-  child_id = fork();
-
-  if (child_id < 0) {
+  if (child_id1 < 0) {
     exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
   } 
 
-  if (child_id == 0) {
-    strftime(path, sizeof(path)-1, "%d-%m_%H:%M", &waktu);
+  if (child_id1 == 0) {
+    char *argv_3[] = {"unzip", "*.zip", NULL};
+    execv("/usr/bin/unzip", argv_3); 
+  }else{
+    while ((wait(&status4)) > 0);
+    id_t child_id2;
+    child_id2 = fork();
 
-    while(strcmp(path,"09-04_22:22") <=0)
-    {
-    sleep(2);
-    t_now = time(NULL);
-    waktu = *localtime(&t_now);
-    strftime(path, sizeof(path)-1, "%d-%m_%H:%M", &waktu);
-    if(strcmp(path,"09-04_22:22")==0){
-    char *argv_6[] = {"rm","-rf", "MUSIK", "FOTO", "FILM", NULL};
-    execv("/bin/rm", argv_6);
+  if (child_id2 < 0) {
+    exit(EXIT_FAILURE);
+  }  
+
+  if(child_id2==0){
+    char *argv_1[] = {"mkdir", "-p", "Musyik", "Fylm", "Pyoto", NULL};
+    execv("/bin/mkdir", argv_1);
+  }else{
+      while ((wait(&status5)) > 0);
+      id_t child_id3;
+      child_id3 = fork();
+
+      if (child_id3 < 0) {
+      exit(EXIT_FAILURE);
+      }  
+
+      if(child_id3==0){
+      filter();
+      }else{
+         while ((wait(&status6)) > 0);
+        hbd();
+      } 
+    }    
     }
-    }
-  } else{
-    while(wait(&status)>0);
-    char *argv_4[] = {"zip", "-rm", "Lopyu_Stevany", ".", "-x", "soal1*", "*.zip", NULL};
-    execv("/bin/zip", argv_4);
-    exit(1);
-  }
-  
+}
 }
 int main() {
-  // setvbuf(stdout, NULL, _IONBF, 0);
   int status,status1;
   time_t t_now = time(NULL);
   struct tm waktu = *localtime(&t_now);
@@ -138,8 +155,5 @@ int main() {
     strftime(path, sizeof(path)-1, "%d-%m_%H:%M", &waktu);
   }
   download();
-  while ((wait(&status)) > 0);  
-  hd();
-  while ((wait(&status1)) > 0);  
   return 0;
 }

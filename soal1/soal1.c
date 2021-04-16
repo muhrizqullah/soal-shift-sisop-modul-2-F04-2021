@@ -10,7 +10,7 @@
 char path[20];
 
 void filter(){
-  int status;
+  int status,status1,status2;
   printf(" masuk");
     if (0 == fork()) {
     glob_t globbuf_film;
@@ -32,7 +32,7 @@ void filter(){
     globbuf_foto.gl_pathv[1] = "-r";
     execvp("cp", &globbuf_foto.gl_pathv[0]);
     }
-    while ((wait(&status)) > 0);
+    while ((wait(&status1)) > 0);
 
     if(0==fork()) {
     glob_t globbuf;
@@ -43,13 +43,12 @@ void filter(){
     globbuf.gl_pathv[1] = "-r";
     execvp("cp", &globbuf.gl_pathv[0]);
     }
-    while ((wait(&status)) > 0);
-    printf("selesai filter");
+    while ((wait(&status2)) > 0);
 }
 
 void download(){  
   pid_t child_id;
-  int i,status,status1,status2,status3, status4, status5, status6;
+  int i,status,status1,status2,status3;
   child_id = fork();
 
   if (child_id < 0) {
@@ -58,18 +57,18 @@ void download(){
 
   if (child_id == 0) {
     // this is child
-    // char *argv[3][7] = {    
-    // {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download", "-O", "Musik_for_Stevany.zip", 0},
-    // {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download", "-O", "Foto_for_Stevany.zip", 0},
-    // {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download", "-O", "Film_for_Stevany.zip", 0}};
-    // for(i = 0; i< 3;i++ ){
-    //   if (0 == fork()){
-    //     while ((wait(&status1)) > 0);
-    //     continue;
-    //   } 
-    //   while ((wait(&status2)) > 0);
-    //   execv("/usr/bin/wget", &argv[i][0]);     
-    //  }
+    char *argv[3][7] = {    
+    {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download", "-O", "Musik_for_Stevany.zip", 0},
+    {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download", "-O", "Foto_for_Stevany.zip", 0},
+    {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download", "-O", "Film_for_Stevany.zip", 0}};
+    for(i = 0; i< 3;i++ ){
+      if (0 == fork()){
+        while ((wait(&status1)) > 0);
+        continue;
+      } 
+      while ((wait(&status2)) > 0);
+      execv("/usr/bin/wget", &argv[i][0]);     
+    }
 
     char *argv_3[] = {"unzip", "*.zip", NULL};
     execv("/usr/bin/unzip", argv_3);        
@@ -85,8 +84,7 @@ void download(){
       if (0 == fork()) continue;
       execve(argv_1[i][0], &argv_1[i][0], NULL);
      }
-    while ((wait(&status1)) > 0);
-    printf("mau filter");
+    while ((wait(&status3)) > 0);
     filter();
     }
     
@@ -142,6 +140,6 @@ int main() {
   download();
   while ((wait(&status)) > 0);  
   hd();
-  printf("sudah selesai");
+  while ((wait(&status1)) > 0);  
   return 0;
 }

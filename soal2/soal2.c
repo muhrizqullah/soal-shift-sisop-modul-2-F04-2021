@@ -10,7 +10,7 @@
 #include <wait.h>
 
 #include <sys/stat.h>
-//execlp("unzip","unzip","-j","pets.zip","-i","*.jpg","-d","/home/gretzy/modul2/petshop",NULL);
+//execlp("unzip","unzip","-j","pets.zip","-i","*.jpg","-d","/home/fiansyah/modul2/petshop",NULL);
 
 void function1(){
   pid_t child_id;
@@ -26,14 +26,14 @@ void function1(){
   if (child_id == 0) {
     // this is child
     
-    char *argv[] = {"mkdir","/home/gretzy/modul2/", NULL};
+    char *argv[] = {"mkdir","/home/fiansyah/modul2/", NULL};
     execv("/bin/mkdir", argv);
     
   } else {
  
     // this is parent
     while ((wait(&status)) > 0);
-   execlp("unzip","unzip","-j","/home/gretzy/soal-shift-2-local/pets.zip","-i","*.jpg","-d","/home/gretzy/modul2/petshop",NULL);
+   execlp("unzip","unzip","-j","pets.zip","-i","*.jpg","-d","/home/fiansyah/modul2/petshop",NULL);
 
     
    }
@@ -41,9 +41,15 @@ void function1(){
 }
 
 
-
 void function211111(char token[],char * nama,char * petname,char age[])
 {
+
+int Lage=strlen(age);
+age[Lage-1]=' ';
+age[Lage-2]=' ';
+age[Lage-3]=' ';
+age[Lage-4]=' ';
+
  pid_t child_id1;
   int status;
   child_id1 = fork();
@@ -51,21 +57,29 @@ void function211111(char token[],char * nama,char * petname,char age[])
   exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
   }
   if (child_id1 == 0) {
-
-
-chdir("/home/gretzy");
-/*
-FILE *f = fopen("file.txt","a");
-fprintf(f,"Nama:%s\nUmur:%s\n",petname,age);
-fclose(f);
-*/
-char *argv[] = {"echo","hai",">>","/home/gretzy/keterangan.txt", NULL};
-  execv("/usr/bin/echo", argv);
+  // while ((wait(&status)) > 0);
+    // this is childi
+    chdir("/home/fiansyah/modul2/petshop");
+    chdir(token);
+    FILE *fp;
+    fp=fopen("keterangan.txt","a");
+    fprintf(fp,"Nama:%s\nUmur:%s\n",petname,age);
+    fclose(fp);
+    
+ //  printf("nama:%s\n",filename);
+   char *argv[] = {"echo","kete", NULL};
+   execv("/bin/echo", argv);
   }
   else{
     while ((wait(&status)) > 0);
+   // function211111(token,nama,petname);
+   return;
   }
 }
+
+
+
+
 
 
 void function21111(char token[],char * nama,char * petname,char age[])
@@ -79,7 +93,7 @@ void function21111(char token[],char * nama,char * petname,char age[])
   if (child_id1 == 0) {
   // while ((wait(&status)) > 0);
     // this is childi
-    chdir("/home/gretzy/modul2/petshop");
+    chdir("/home/fiansyah/modul2/petshop");
  //  printf("nama:%s\n",filename);
    char *argv[] = {"mv",nama,token, NULL};
    execv("/bin/mv", argv);
@@ -107,7 +121,7 @@ void function2111(char token[],char * filename,char * petname,char age[])
   if (child_id1 == 0) {
   // while ((wait(&status)) > 0);
     // this is childi
-    chdir("/home/gretzy/modul2/petshop");
+    chdir("/home/fiansyah/modul2/petshop");
  //  printf("nama:%s\n",filename);
    char *argv[] = {"mv",filename,nama, NULL};
    execv("/bin/mv", argv);
@@ -131,7 +145,7 @@ char * token=strtok(token1,";");
   int status;
 
   child_id1 = fork();
-//  chdir("/home/gretzy/modul2/petshop");
+//  chdir("/home/fiansyah/modul2/petshop");
   if (child_id1 < 0) {
 //	return;
   exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
@@ -140,7 +154,7 @@ char * token=strtok(token1,";");
   // while ((wait(&status)) > 0);
 
     // this is child
-   chdir("/home/gretzy/modul2/petshop");
+   chdir("/home/fiansyah/modul2/petshop");
  // while ((wait(&status)) > 0); 
    printf("nama token:%s\n",token);
     char *argv[] = {"mkdir",token, NULL};
@@ -157,7 +171,11 @@ char * token=strtok(token1,";");
 
 }
 
-void function21211111(char * filename,char * folder,char token[],char * nama,char * nama1, char * nama2)
+
+
+
+
+void ganti(char * filename,char * folder,char token[],char * nama1, char * nama2,char age1[],char age2[])
 {
   pid_t child_id1;
   int status;
@@ -169,9 +187,15 @@ void function21211111(char * filename,char * folder,char token[],char * nama,cha
   // while ((wait(&status)) > 0);
 
     // this is child
-    chdir("/home/gretzy/modul2/petshop");
-    char *argv[] = {"mv",strcat(nama1,".jpg"),token, NULL};//belum selesai
-    execv("/bin/mv", argv);
+    chdir("/home/fiansyah/modul2/petshop");
+    chdir(folder);
+    FILE *fp;
+    fp=fopen("keterangan.txt","a");
+    fprintf(fp,"Nama:%s\nUmur:%c\nNama:%s\nUmur:%s\n",nama1,age1[0],nama2,age2);
+    fclose(fp);
+     char *argv[] = {"echo","sukses", NULL};
+    execv("/bin/echo", argv);
+
 
   } else {
     // this is parent
@@ -183,7 +207,35 @@ void function21211111(char * filename,char * folder,char token[],char * nama,cha
 
 
 
-void function2121111(char * filekedua,char * folderkedua,char token[],char * nama, char * nama1, char * nama2)
+
+
+void function21211111(char * filename,char * folder,char token[],char * nama,char * nama1, char * nama2,char age1[],char age2[])
+{
+  pid_t child_id1;
+  int status;
+  child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  else if (child_id1 == 0) {
+  // while ((wait(&status)) > 0);
+
+    // this is child
+    chdir("/home/fiansyah/modul2/petshop");
+    char *argv[] = {"mv",strcat(nama1,".jpg"),token, NULL};//belum selesai
+    execv("/bin/mv", argv);
+ 
+  } else {
+    // this is parent
+    while ((wait(&status)) > 0);
+    ganti(filename,folder,token,nama1,nama2,age1,age2);
+    return;
+  }
+}
+
+
+
+void function2121111(char * filekedua,char * folderkedua,char token[],char * nama, char * nama1, char * nama2,char age1[],char age2[])
 {
   pid_t child_id1;
   int status; 
@@ -195,7 +247,7 @@ printf("folder-=-0=0=  %s, file 8wduwdidw= %s\n",token,nama);
   if (child_id1 == 0) {
  printf("filekedua=%s...........................%s\n",nama,nama1);
     // this is child
-    chdir("/home/gretzy/modul2/petshop");
+    chdir("/home/fiansyah/modul2/petshop");
 //    char *argv[] = {"mv",nama,token, NULL};//belum selesai
   //  execv("/bin/mv", argv);
       char *argv[] = {"mv",nama,strcat(nama1,".jpg"), NULL};//belum selesai
@@ -203,37 +255,7 @@ printf("folder-=-0=0=  %s, file 8wduwdidw= %s\n",token,nama);
   } else {
     // this is parent
     while ((wait(&status)) > 0);
-    function21211111(filekedua,folderkedua,token,nama,nama1,nama2);
-    return;
-  }
-}
-
-
-
-
-
-void  pivot(char * filekedua,char * folderkedua,char token[],char * nama, char * nama1, char * nama2)
-{
-  pid_t child_id1;
-  int status;
-printf("folder-=-0=0=  %s, file 8wduwdidw= %s\n",token,nama);
-   child_id1 = fork();
-  if (child_id1 < 0) {
-  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
-  }
-  if (child_id1 == 0) {
- printf("filekedua=%s...........................%s\n",nama,nama1);
-    // this is child
-    chdir("/home/gretzy/modul2/petshop");
-//    char *argv[] = {"mv",nama,token, NULL};//belum selesai
-  //  execv("/bin/mv", argv);
-      char *argv[] = {"mv",strcat(nama2,".jpg"),folderkedua, NULL};//belum selesai
-      execv("/bin/mv", argv);
-  } else {
-    // this is parent
-    while ((wait(&status)) > 0);
-    function2121111(filekedua,folderkedua,token,nama,nama1,nama2);
-
+    function21211111(filekedua,folderkedua,token,nama,nama1,nama2,age1,age2);
     return;
   }
 }
@@ -244,14 +266,18 @@ printf("folder-=-0=0=  %s, file 8wduwdidw= %s\n",token,nama);
 
 
 
-void function212111(char * filekedua,char * folderkedua,char token[],char * nama,char * nama1, char * nama2)
+
+
+
+
+void function212111(char * filekedua,char * folderkedua,char token[],char * nama,char * nama1, char * nama2,char age1[],char age2[])
 {
   pid_t child_id1;
   int status;
 
      
   child_id1 = fork();
-//  chdir("/home/gretzy/modul2/petshop");
+//  chdir("/home/fiansyah/modul2/petshop");
   if (child_id1 < 0) {
 //      return;
   exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
@@ -260,16 +286,15 @@ void function212111(char * filekedua,char * folderkedua,char token[],char * nama
   // while ((wait(&status)) > 0);
 
     // this is child
-   chdir("/home/gretzy/modul2/petshop");
-    char *argv[] = {"mv",filekedua,strcat(nama2,".jpg"), NULL};//belum selesai
+   chdir("/home/fiansyah/modul2/petshop");
+    char *argv[] = {"mv",filekedua,folderkedua, NULL};//belum selesai
     execv("/bin/mv", argv);
 
   } else {
     // this is parent
     while ((wait(&status)) > 0);
-     //  function2121111(filekedua,folderkedua,token,nama,nama1,nama2);
-       pivot(filekedua,folderkedua,token,nama,nama1,nama2);
-	 return;
+       function2121111(filekedua,folderkedua,token,nama,nama1,nama2,age1,age2);
+    return;
 
   }
 
@@ -278,7 +303,7 @@ void function212111(char * filekedua,char * folderkedua,char token[],char * nama
 
 
 //akhir
-void function21211(char token[],char *token3,char * filename,char * nama, char * nama1,char * nama2)
+void function21211(char token[],char *token3,char * filename,char * nama, char * nama1,char * nama2,char age1[],char age2[])
 {
        int panjang=strlen(filename);
        char str[panjang],str1[panjang];
@@ -299,14 +324,14 @@ printf("strending:%s\nnamafileending=%s\n",str1,filekedua);
   // while ((wait(&status)) > 0);
 
    // this is childi
-    chdir("/home/gretzy/modul2/petshop");
+    chdir("/home/fiansyah/modul2/petshop");
    char *argv[] = {"mv",filename,filekedua,NULL};//perlu diganti banget
   // char *argv[] = {"mv",filename,token4, NULL};
    execv("/bin/mv", argv);
   }
   else{
     while ((wait(&status)) > 0);
-    function212111(filekedua,token3,token,nama,nama1,nama2);
+    function212111(filekedua,token3,token,nama,nama1,nama2,age1,age2);
    return;
 
   }
@@ -319,7 +344,7 @@ printf("strending:%s\nnamafileending=%s\n",str1,filekedua);
 
 
 
-void function2121(char token[],char *token3,char * filename,char * nama1, char * nama2)
+void function2121(char token[],char *token3,char * filename,char * nama1, char * nama2,char age1[],char age2[])
 {
        int panjang=strlen(filename);
        char str[panjang],str1[panjang];
@@ -341,13 +366,13 @@ char * nama=strcat(str1,".jpg");
   // while ((wait(&status)) > 0);
 
    // this is childi
-    chdir("/home/gretzy/modul2/petshop");
+    chdir("/home/fiansyah/modul2/petshop");
    char *argv[] = {"cp",filename,nama, NULL};//diubah
    execv("/bin/cp", argv);
   }
   else{
     while ((wait(&status)) > 0);
-    function21211(token,token3,filename,nama,nama1,nama2);
+    function21211(token,token3,filename,nama,nama1,nama2,age1,age2);
    return;
 
   }
@@ -356,7 +381,7 @@ char * nama=strcat(str1,".jpg");
 
 
 
-void function212(char token1[],char *token3,char * filename,char * nama1,char * nama2)
+void function212(char token1[],char *token3,char * filename,char * nama1,char * nama2,char age1[],char age2[])
 {
 
 char * token=strtok(token1,";");
@@ -365,7 +390,7 @@ char * token=strtok(token1,";");
   int status;
 
   child_id1 = fork();
-//  chdir("/home/gretzy/modul2/petshop");
+//  chdir("/home/fiansyah/modul2/petshop");
   if (child_id1 < 0) {
 //      return;
   exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
@@ -374,7 +399,7 @@ char * token=strtok(token1,";");
   // while ((wait(&status)) > 0);
 
     // this is child
-   chdir("/home/gretzy/modul2/petshop");
+   chdir("/home/fiansyah/modul2/petshop");
  // while ((wait(&status)) > 0); 
    printf("nama token:%s\n",token);
     char *argv[] = {"mkdir",token, NULL};
@@ -382,12 +407,23 @@ char * token=strtok(token1,";");
   } else {
     // this is parent
     while ((wait(&status)) > 0);
-       function2121 (token1,token3,filename,nama1,nama2);
+       function2121 (token1,token3,filename,nama1,nama2,age1,age2);
     return;
 
   }
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 void function21()
 { 
@@ -400,7 +436,8 @@ FILE *fp;
   int i=0;
   int a;
   // function1();
-  d = opendir("/home/gretzy/modul2/petshop");
+printf("sayang");
+  d = opendir("/home/fiansyah/modul2/petshop");
 	printf("sukses");
   if (d)
   {
@@ -425,15 +462,14 @@ FILE *fp;
 		printf("token %d =%s\n",add,token1[add]);
 		add++;
 	}
-	   printf("jumlah token=%d\n",add);
-      
-
-	if(add==3){
-
-	function211(str1,filenames[i],token1[0],token1[1]);
+	printf("jumlah token=%d\n",add);
+      if(add==3){
+      int panjangtoken1=strlen(token1[1]);
+      char tokenpengganti[panjangtoken1];
+      strcpy(tokenpengganti,token1[1]);
+      function211(str1,filenames[i],token1[0],tokenpengganti);
 	}
       else{
-
 	int lenght=strlen(token1[1]);
        char str2[lenght],str3[lenght];
        strcpy(str2,token1[1]);
@@ -441,30 +477,11 @@ FILE *fp;
        char* token3=strtok(str3,"_");
        token3=strtok(NULL,"_");
 	printf("token khusus %s\n",token3);
-	
-/*
-
-	int agelen1=strlen(token1[2]);
-        char age1[agelen1];
-        strcpy(age1,token1[2]);
-        age1[agelen1-1]=' ';
-         age1[agelen1-2]=' ';
-      age1[agelen1-3]=' ';
-     age1[agelen1-4]=' ';
-
-     char folder1[]="/home/gretzy/modul2/petshop/";
-     char namafile1[]="//home/gretzy/.txt";
-     strcat(folder1,str1);
-      chdir(folder1);
-
-
-        FILE *f = fopen("/home/gretzy/.txt","a");
-        fprintf(f,"Nama:%s\nUmur:%s\n",token1[2],age1);
-        fclose(f);
-*/
-        function212(str1,token3,filenames[i],token1[0],token1[2]);      
-  
-    }
+      int panjangtoken1=strlen(token1[1]);
+      char tokenpengganti[panjangtoken1];
+      strcpy(tokenpengganti,token1[1]);
+        function212(str1,token3,filenames[i],token1[0],token1[2],tokenpengganti,token1[4]);      
+      }
 
 
 
@@ -505,6 +522,9 @@ if (child_id1 < 0) {
 
 
 }
+
+
+
 
 int main(){
 

@@ -1,10 +1,16 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <wait.h>
 #include <time.h>
+#include <wait.h>
 #include <string.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <syslog.h>
 #include <glob.h>
 
 char path[20];
@@ -32,7 +38,7 @@ void filter(){
     execvp("cp", &globbuf_foto.gl_pathv[0]);
     }
     while ((wait(&status1)) > 0);
-
+    
     if(0==fork()) {
     glob_t globbuf;
     globbuf.gl_offs = 2;
@@ -85,22 +91,21 @@ void download(){
 
   if (child_id == 0) {
     // this is child
-    char *argv[3][7] = {    
-    {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download", "-O", "Musik_for_Stevany.zip", 0},
-    {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download", "-O", "Foto_for_Stevany.zip", 0},
-    {"/usr/bin/wget", "wget", "--no-check-certificate", "https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download", "-O", "Film_for_Stevany.zip", 0}};
+    char *argv[3][8] = {    
+    {"/usr/bin/wget", "wget", "-bqc", "--no-check-certificate", "https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download", "-O", "Musik_for_Stevany.zip", 0},
+    {"/usr/bin/wget", "wget", "-bqc", "--no-check-certificate", "https://drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download", "-O", "Foto_for_Stevany.zip", 0},
+    {"/usr/bin/wget", "wget", "-bqc", "--no-check-certificate", "https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download", "-O", "Film_for_Stevany.zip", 0}};
     for(i = 0; i< 3;i++ ){
-      if (0 == fork()){
-        while ((wait(&status1)) > 0);
-        continue;
-      } 
-      while ((wait(&status2)) > 0);
-      execv("/usr/bin/wget", &argv[i][0]);     
+      if (0 == fork()){continue;
+      while ((wait(&status1)) > 0);} 
+      execv("/usr/bin/wget", &argv[i][0]);
     }         
     }
    else{
     // this is parent
     while ((wait(&status3)) > 0);
+    sleep(30);
+    while ((wait(&status2)) > 0);
     pid_t child_id1;
     child_id1 = fork();
 
@@ -121,6 +126,7 @@ void download(){
   }  
 
   if(child_id2==0){
+    while ((wait(&status)) > 0);
     char *argv_1[] = {"mkdir", "-p", "Musyik", "Fylm", "Pyoto", NULL};
     execv("/bin/mkdir", argv_1);
   }else{
@@ -143,7 +149,25 @@ void download(){
 }
 }
 int main() {
-  int status,status1;
+  pid_t pid, sid;
+  pid = fork();
+  if (pid < 0) {
+    exit(EXIT_FAILURE);
+  }
+  if (pid > 0) {
+    exit(EXIT_SUCCESS);
+  }
+  umask(0);
+  sid = setsid();
+  if (sid < 0) {
+    exit(EXIT_FAILURE);
+  }
+  close(STDIN_FILENO);
+  close(STDOUT_FILENO);
+  close(STDERR_FILENO);
+
+  while(1){
+    int status,status1;
   time_t t_now = time(NULL);
   struct tm waktu = *localtime(&t_now);
   strftime(path, sizeof(path)-1, "%d-%m_%H:%M", &waktu);
@@ -156,4 +180,5 @@ int main() {
   }
   download();
   return 0;
-}
+  }
+  }

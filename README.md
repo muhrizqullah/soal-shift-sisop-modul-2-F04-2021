@@ -11,6 +11,60 @@
 #### Screenshot jalannya progran
 
 ## Soal 2
+### Soal 2A
+Membuat program untuk mengextract file pets.zip yang diberikan ke dalam folder “/home/[user]/modul2/petshop”. Kemudian membuat program untuk memilah file yang dibutuhkan dan yang tidak
+```c
+if (child_id == 0) {
+    // this is child
+ 
+    char *argv[] = {"mkdir","/home/user/modul2/", NULL};
+    execv("/bin/mkdir", argv);
+ 
+  } else {
+ 
+    // this is parent
+    while ((wait(&status)) > 0);
+   execlp("unzip","unzip","-j","pets.zip","-i","*.jpg","-d","/home/user/modul2/petshop",NULL);
+ 
+ 
+   }
+```
+Pada fungsi diatas kita melekakukan spawning process, dimana child process akan melakukan `exec` untuk membuat direktori baru dengan nama sesuai parameter saat fungsi dipanggil di *main*. Lalu pada parent process akan menunggu hingga process di child selesai dan melakukan `exec` untuk menunzip filenya dan menempatkan file hasil `unzip` ke dalam direktori `/home/user/modul2/petshop` serta membuang file yang tidak diperlukan.
+
+### Soal 2B
+Membuat folder-folder jenis jenis peliharaan yang ada dalam file *pets.zip tersebut*.
+```c
+ pid_t child_id1;
+  int status;
+ 
+  child_id1 = fork();
+ 
+  if (child_id1 < 0) {
+ 
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  if (child_id1 == 0) {
+ 
+ 
+    // this is child
+   chdir("/home/user/modul2/petshop");
+ 
+    char *argv[] = {"mkdir",token1, NULL};
+    execv("/bin/mkdir", argv);
+ 
+ 
+  } else {
+    // this is parent
+    while ((wait(&status)) > 0);
+	function2111(token1,filename,petname,age);
+    return;
+ 
+  }
+ 
+}
+```
+ Pertama dengan menggunakan `chdir` direktori di set di direktori *petshop*. Kemudian membuat direktori sesuai nama parameter yakni nama-nama jenis peliharaan dengan `exec`.
+
 #### Kendala
 #### Screenshot jalannya progran
 

@@ -12,7 +12,7 @@
 
 ## Soal 2
 ### Soal 2A
-Membuat program untuk mengextract file pets.zip yang diberikan ke dalam folder “/home/[user]/modul2/petshop”. Kemudian membuat program untuk memilah file yang dibutuhkan dan yang tidak
+Membuat program c untuk mengextract file pets.zip yang diberikan ke dalam folder “/home/[user]/modul2/petshop”. Kemudian membuat program untuk memilah file yang dibutuhkan dan yang tidak
 ```c
 if (child_id == 0) {
     // this is child
@@ -32,7 +32,7 @@ if (child_id == 0) {
 Pada fungsi diatas kita melekakukan spawning process, dimana child process akan melakukan `exec` untuk membuat direktori baru dengan nama sesuai parameter saat fungsi dipanggil di *main*. Lalu pada parent process akan menunggu hingga process di child selesai dan melakukan `exec` untuk menunzip filenya dan menempatkan file hasil `unzip` ke dalam direktori `/home/user/modul2/petshop` serta membuang file yang tidak diperlukan.
 
 ### Soal 2B
-Membuat folder-folder jenis jenis peliharaan yang ada dalam file *pets.zip tersebut*.
+Membuat program c untuk membuat folder-folder jenis jenis peliharaan yang ada dalam file *pets.zip tersebut*.
 ```c
  pid_t child_id1;
   int status;
@@ -64,6 +64,280 @@ Membuat folder-folder jenis jenis peliharaan yang ada dalam file *pets.zip terse
 }
 ```
  Pertama dengan menggunakan `chdir` direktori di set di direktori *petshop*. Kemudian membuat direktori sesuai nama parameter yakni nama-nama jenis peliharaan dengan `exec`.
+ ### Soal 2C
+Membuat program c memindahkan foto ke folder dengan kategori yang sesuai dan di rename dengan nama peliharaan.
+```c
+void function21111(char token[],char * nama,char * petname,char age[])
+{
+ pid_t child_id1;
+  int status;
+  child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  if (child_id1 == 0) {
+    chdir("/home/user/modul2/petshop");
+ 
+   char *argv[] = {"mv",nama,token, NULL};
+   execv("/bin/mv", argv);
+  }
+  else{
+    while ((wait(&status)) > 0);
+    function211111(token,nama,petname,age);
+   return;
+  }
+}
+
+void function2111(char token[],char * filename,char * petname,char age[])
+{
+ pid_t child_id1;
+  int status;
+ 
+	age[strlen(age)-1]=' ';
+	age[strlen(age)-2]=' ';
+	age[strlen(age)-3]=' ';
+	age[strlen(age)-4]=' ';
+    chdir("/home/user/modul2/petshop");
+    chdir(token);
+    FILE *fp;
+    fp=fopen("keterangan.txt","a");
+    fprintf(fp,"Nama:%s\nUmur:%s\n",petname,age);
+    fclose(fp);
+ 
+  char *nama=strcat(petname,".jpg");
+ 
+ 
+  child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  if (child_id1 == 0) {
+ 
+    chdir("/home/user/modul2/petshop");
+ 
+   char *argv[] = {"mv",filename,nama, NULL};
+   execv("/bin/mv", argv);
+  }
+  else{
+    while ((wait(&status)) > 0);
+   function21111(token,nama,petname,age);
+   return;
+ 
+  }
+ 
+}
+```
+*function2111()* untuk merename nama file menjadi nama hewan peliharaan. *function21111* untuk memindahkan file ke dalam folder sesuai jenis hewan peliharaan.
+ ### Soal 2D
+Membuat satu foto yang terdapat lebih dari satu peliharaan maka foto harus di pindah ke masing-masing kategori yang sesuai. 
+```c
+
+void buatfilekedua(char * filename,char * folder,char * nama2)
+{
+printf("filekeduakuterakhir:%s\n",filename);
+ 
+  pid_t child_id1;
+  int status;
+  child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  else if (child_id1 == 0) {
+ 
+       char str[strlen(filename)],str1[strlen(filename)];
+       strcpy(str,filename);
+       strcpy(str1,str);
+       char* token=strtok(str1,";");
+       token=strtok(NULL,";");
+       token=strtok(NULL,".jpg");
+ 
+    chdir("/home/user/modul2/petshop");
+    chdir(folder);
+    FILE *fp;
+    fp=fopen("keterangan.txt","a");
+    fprintf(fp,"Nama:%s\nUmur:%s\n",nama2,token);
+    fclose(fp); 
+    char *argv[] = {"echo","saya", NULL};//belum selesai
+    execv("/bin/echo", argv);
+ 
+  } else {
+    // this is parent
+    while ((wait(&status)) > 0);
+        // buatfilekedua(filename,folder,nama2);
+	return;
+  }
+}
+
+void function21211111(char * filename,char * folder,char token[],char * nama,char * nama1, char * nama2)
+{
+printf("filekeduakuterakhir:%s\n",filename);
+ 
+  pid_t child_id1;
+  int status;
+  child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  else if (child_id1 == 0) {
+ 
+    // this is child
+    chdir("/home/user/modul2/petshop");
+    char *argv[] = {"mv",strcat(nama1,".jpg"),token, NULL};//belum selesai
+    execv("/bin/mv", argv);
+ 
+  } else {
+    // this is parent
+    while ((wait(&status)) > 0);
+         buatfilekedua(filename,folder,nama2);
+    return;
+  }
+}
+ 
+ 
+void function2121111(char * filekedua,char * folderkedua,char token[],char * nama, char * nama1, char * nama2)
+{
+  pid_t child_id1;
+  int status; 
+ 
+   child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  if (child_id1 == 0) {
+ 
+    chdir("/home/user/modul2/petshop");
+ 
+      char *argv[] = {"mv",nama,strcat(nama1,".jpg"), NULL};//belum selesai
+      execv("/bin/mv", argv);
+  } else {
+    // this is parent
+    while ((wait(&status)) > 0);
+    function21211111(filekedua,folderkedua,token,nama,nama1,nama2);
+    return;
+  }
+}
+
+void  pivot(char * filekedua,char * folderkedua,char token[],char * nama, char * nama1, char * nama2)
+{
+  pid_t child_id1;
+  int status;
+   child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  if (child_id1 == 0) {
+ printf("filekedua=%s...........................%s\n",nama,nama1);
+    // this is child
+    chdir("/home/user/modul2/petshop");
+ 
+      char *argv[] = {"mv",strcat(nama2,".jpg"),folderkedua, NULL};//belum selesai
+      execv("/bin/mv", argv);
+  } else {
+    // this is parent
+    while ((wait(&status)) > 0);
+    function2121111(filekedua,folderkedua,token,nama,nama1,nama2);
+    return;
+  }
+}
+ 
+void function212111(char * filekedua,char * folderkedua,char token[],char * nama,char * nama1, char * nama2)
+{
+  pid_t child_id1;
+  int status;
+  child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  if (child_id1 == 0) {
+    // this is child
+   chdir("/home/user/modul2/petshop");
+    char *argv[] = {"mv",filekedua,strcat(nama2,".jpg"), NULL};//belum selesai
+    execv("/bin/mv", argv);
+ 
+  } else {
+    // this is parent
+    while ((wait(&status)) > 0);
+       pivot(filekedua,folderkedua,token,nama,nama1,nama2);
+	 return;
+ 
+  }
+ 
+}
+ 
+void function21211(char token[],char *token3,char * filename,char * nama, char * nama1,char * nama2)
+{
+       int panjang=strlen(filename);
+       char str[panjang],str1[panjang];
+       strcpy(str,filename);
+       strcpy(str1,str);
+       int add=0;
+       char* filekedua=strtok(str1,"_");
+       filekedua=strtok(NULL,"_");
+ 
+ pid_t child_id1;
+  int status;
+  child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  if (child_id1 == 0) {
+    chdir("/home/user/modul2/petshop");
+   char *argv[] = {"mv",filename,filekedua,NULL};//perlu diganti banget
+   execv("/bin/mv", argv);
+  }
+  else{
+    while ((wait(&status)) > 0);
+    function212111(filekedua,token3,token,nama,nama1,nama2);
+   return;
+ 
+  }
+ 
+}
+
+void function2121(char token[],char *token3,char * filename,char * nama1, char * nama2,char * age1,char * age2)
+{
+ 
+    chdir("/home/user/modul2/petshop");
+    chdir(token);
+    FILE *fp;
+    fp=fopen("keterangan.txt","a");
+    fprintf(fp,"Nama:%s\nUmur:%s\n",nama1,age1);
+    fclose(fp);
+ 
+       int panjang=strlen(filename);
+       char str[panjang],str1[panjang];
+       strcpy(str,filename);
+       strcpy(str1,str);
+       int add=0;
+       char* token4=strtok(str1,"_");
+       token4=strtok(NULL,"_");
+ 
+char * nama=strcat(str1,".jpg");
+ pid_t child_id1;
+  int status;
+  child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  if (child_id1 == 0) {
+   // this is childi
+    chdir("/home/user/modul2/petshop");
+   char *argv[] = {"cp",filename,nama, NULL};//diubah
+   execv("/bin/cp", argv);
+  }
+  else{
+    while ((wait(&status)) > 0);
+    function21211(token,token3,filename,nama,nama1,nama2);
+   return;
+ 
+  }
+ 
+}
+ 
+```
+fungsi *function2121*  memcopy file yang memiliki 2 hewan peliharaan menjadi 2 gambar, parameter *nama* disini adalah proses pertama pemisahan nama dengan isi nama file 1 hewan. Jadi akan ada 2 file. Pertama file dengan 2 nama hewan, dan 1 file lagi sudah spesifik nama file hewan yang sudah terdiri dengan jenis peliharaan,nama hewan,dan umur.
+fungsi *function21211* mengubah file yang masih memiliki nama file 2 hewan menjadi 1 hewan. Sehingga foto sudah terbagi menjadi 2.
+fungsi *function212111* & *pivot* mengubah namafile menjadi nama hewan peliharaan.
 
 #### Kendala
 #### Screenshot jalannya progran

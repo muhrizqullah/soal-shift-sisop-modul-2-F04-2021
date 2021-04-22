@@ -429,7 +429,10 @@ fungsi *buatfilekedua* dan fungsi *function2121* digunakan untuk menyimpan nama 
 
 
 #### Kendala
+Penggunaan `strcat` dan `strtok` yang terlalu banyak akan membuat jalannya program menjadi terganggu sehingga harus mengurangi penggunaannya sehingga konsekuensinya syntax program menjadi sangat panjang
 #### Screenshot jalannya progran
+
+<img alt="Output Soal3" src="Foto/soal2m.png">
 
 ## Soal 3
 ### Soal 3A

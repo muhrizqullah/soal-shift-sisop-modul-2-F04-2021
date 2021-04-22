@@ -29,7 +29,7 @@ if (child_id == 0) {
  
    }
 ```
-Pada fungsi diatas kita melekakukan spawning process, dimana child process akan melakukan `exec` untuk membuat direktori baru dengan nama sesuai parameter saat fungsi dipanggil di *main*. Lalu pada parent process akan menunggu hingga process di child selesai dan melakukan `exec` untuk menunzip filenya dan menempatkan file hasil `unzip` ke dalam direktori `/home/user/modul2/petshop` serta membuang file yang tidak diperlukan.
+Pada fungsi diatas kita melakukan spawning process, dimana child process akan melakukan `exec` untuk membuat direktori baru dengan nama sesuai parameter saat fungsi dipanggil di *main*. Lalu pada parent process akan menunggu hingga process di child selesai dan melakukan `exec` untuk menunzip filenya dan menempatkan file hasil `unzip` ke dalam direktori `/home/user/modul2/petshop` serta membuang file yang tidak diperlukan.
 
 ### Soal 2B
 Membuat program c untuk membuat folder-folder jenis jenis peliharaan yang ada dalam file *pets.zip tersebut*.
@@ -301,7 +301,7 @@ char * nama=strcat(str1,".jpg");
 ```
 fungsi *function2121*  memcopy file yang memiliki 2 hewan peliharaan menjadi 2 gambar, parameter *nama* disini adalah proses pertama pemisahan nama dengan isi nama file 1 hewan. Jadi akan ada 2 file. Pertama file dengan 2 nama hewan, dan 1 file lagi sudah spesifik nama file hewan yang sudah terdiri dengan jenis peliharaan,nama hewan,dan umur.
 fungsi *function21211* mengubah file yang masih memiliki nama file 2 hewan menjadi 1 hewan. Sehingga foto sudah terbagi menjadi 2.
-fungsi *function212111* mengubah namafile menjadi nama hewan peliharaan & fungsi *pivot* memindahkan file pada fungsi *function212111* ke dalam direktori jenis hewan yang sesuai. Fungsi *function2121111* mengubah 1 file hewan tersisa yang masih di direktori petshop menjadi nama hewan peliharaan kemudian Fungsi *function21211111* memindahkan file tersebut ke direktori yang sesuai dengan jenis hewa peliharaan.
+fungsi *function212111* mengubah namafile menjadi nama hewan peliharaan & fungsi *pivot* memindahkan file pada fungsi *function212111* ke dalam direktori jenis hewan yang sesuai. Fungsi *function2121111* mengubah 1 file hewan tersisa yang masih di direktori petshop menjadi nama hewan peliharaan kemudian Fungsi *function21211111* memindahkan file tersebut ke direktori yang sesuai dengan jenis hewan peliharaan.
 
 ### Soal 2E
 Membuat program C dimana program membuat sebuah file "keterangan.txt" yang berisi nama dan umur semua peliharaan dalam setiap folder jenis hewan peliharaan
@@ -432,7 +432,7 @@ fungsi *buatfilekedua* dan fungsi *function2121* digunakan untuk menyimpan nama 
 Penggunaan `strcat` dan `strtok` yang terlalu banyak akan membuat jalannya program menjadi terganggu sehingga harus mengurangi penggunaannya sehingga konsekuensinya syntax program menjadi sangat panjang
 #### Screenshot jalannya progran
 
-<img alt="Output Soal3" src="Foto/soal2m.png">
+<img alt="Output Soal3" src="Foto/soal2m.jpg">
 
 ## Soal 3
 ### Soal 3A

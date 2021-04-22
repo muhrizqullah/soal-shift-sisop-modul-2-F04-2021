@@ -306,9 +306,128 @@ fungsi *function212111* mengubah namafile menjadi nama hewan peliharaan & fungsi
 ### Soal 2E
 Membuat program C dimana program membuat sebuah file "keterangan.txt" yang berisi nama dan umur semua peliharaan dalam setiap folder jenis hewan peliharaan
 ```c
+void function2111(char token[],char * filename,char * petname,char age[])
+{
+ pid_t child_id1;
+  int status;
+ 
+	age[strlen(age)-1]=' ';
+	age[strlen(age)-2]=' ';
+	age[strlen(age)-3]=' ';
+	age[strlen(age)-4]=' ';
+    chdir("/home/user/modul2/petshop");
+    chdir(token);
+    FILE *fp;
+    fp=fopen("keterangan.txt","a");
+    fprintf(fp,"Nama:%s\nUmur:%s\n",petname,age);
+    fclose(fp);
+ 
+  char *nama=strcat(petname,".jpg");
+ 
+ 
+  child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  if (child_id1 == 0) {
+ 
+    chdir("/home/user/modul2/petshop");
+ 
+   char *argv[] = {"mv",filename,nama, NULL};
+   execv("/bin/mv", argv);
+  }
+  else{
+    while ((wait(&status)) > 0);
+   function21111(token,nama,petname,age);
+   return;
+ 
+  }
+ 
+}
 ```
 ```c
+void function2121(char token[],char *token3,char * filename,char * nama1, char * nama2,char * age1,char * age2)
+{
+ 
+    chdir("/home/user/modul2/petshop");
+    chdir(token);
+    FILE *fp;
+    fp=fopen("keterangan.txt","a");
+    fprintf(fp,"Nama:%s\nUmur:%s\n",nama1,age1);
+    fclose(fp);
+ 
+       int panjang=strlen(filename);
+       char str[panjang],str1[panjang];
+       strcpy(str,filename);
+       strcpy(str1,str);
+       int add=0;
+       char* token4=strtok(str1,"_");
+       token4=strtok(NULL,"_");
+ 
+char * nama=strcat(str1,".jpg");
+ pid_t child_id1;
+  int status;
+  child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  if (child_id1 == 0) {
+   // this is childi
+    chdir("/home/user/modul2/petshop");
+   char *argv[] = {"cp",filename,nama, NULL};//diubah
+   execv("/bin/cp", argv);
+  }
+  else{
+    while ((wait(&status)) > 0);
+    function21211(token,token3,filename,nama,nama1,nama2);
+   return;
+ 
+  }
+ 
+}
 ```
+```c
+void buatfilekedua(char * filename,char * folder,char * nama2)
+{
+printf("filekeduakuterakhir:%s\n",filename);
+ 
+  pid_t child_id1;
+  int status;
+  child_id1 = fork();
+  if (child_id1 < 0) {
+  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+  }
+  else if (child_id1 == 0) {
+ 
+       char str[strlen(filename)],str1[strlen(filename)];
+       strcpy(str,filename);
+       strcpy(str1,str);
+       char* token=strtok(str1,";");
+       token=strtok(NULL,";");
+       token=strtok(NULL,".jpg");
+ 
+    chdir("/home/user/modul2/petshop");
+    chdir(folder);
+    FILE *fp;
+    fp=fopen("keterangan.txt","a");
+    fprintf(fp,"Nama:%s\nUmur:%s\n",nama2,token);
+    fclose(fp);
+ 
+    char *argv[] = {"echo","saya", NULL};//belum selesai
+    execv("/bin/echo", argv);
+ 
+  } else {
+    // this is parent
+    while ((wait(&status)) > 0);
+        // buatfilekedua(filename,folder,nama2);
+	return;
+  }
+}
+```
+fungsi *function2111* digunakan untuk membuat file txt untuk menyimpan nama hewan dan umur hewan tersebut dengan syarat foto hewan terdiri dari gambar 1 hewan peliharaan.
+fungsi *buatfilekedua* dan fungsi *function2121* digunakan untuk menyimpan nama hewan dan umur hewan tersebut dengan syarat foto hewan terdiri dari gambar 2 hewan peliharaan.
+
+
 #### Kendala
 #### Screenshot jalannya progran
 

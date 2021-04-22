@@ -132,42 +132,6 @@ void function2111(char token[],char * filename,char * petname,char age[])
 Membuat satu foto yang terdapat lebih dari satu peliharaan maka foto harus di pindah ke masing-masing kategori yang sesuai. 
 ```c
 
-void buatfilekedua(char * filename,char * folder,char * nama2)
-{
-printf("filekeduakuterakhir:%s\n",filename);
- 
-  pid_t child_id1;
-  int status;
-  child_id1 = fork();
-  if (child_id1 < 0) {
-  exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
-  }
-  else if (child_id1 == 0) {
- 
-       char str[strlen(filename)],str1[strlen(filename)];
-       strcpy(str,filename);
-       strcpy(str1,str);
-       char* token=strtok(str1,";");
-       token=strtok(NULL,";");
-       token=strtok(NULL,".jpg");
- 
-    chdir("/home/user/modul2/petshop");
-    chdir(folder);
-    FILE *fp;
-    fp=fopen("keterangan.txt","a");
-    fprintf(fp,"Nama:%s\nUmur:%s\n",nama2,token);
-    fclose(fp); 
-    char *argv[] = {"echo","saya", NULL};//belum selesai
-    execv("/bin/echo", argv);
- 
-  } else {
-    // this is parent
-    while ((wait(&status)) > 0);
-        // buatfilekedua(filename,folder,nama2);
-	return;
-  }
-}
-
 void function21211111(char * filename,char * folder,char token[],char * nama,char * nama1, char * nama2)
 {
 printf("filekeduakuterakhir:%s\n",filename);
@@ -337,8 +301,14 @@ char * nama=strcat(str1,".jpg");
 ```
 fungsi *function2121*  memcopy file yang memiliki 2 hewan peliharaan menjadi 2 gambar, parameter *nama* disini adalah proses pertama pemisahan nama dengan isi nama file 1 hewan. Jadi akan ada 2 file. Pertama file dengan 2 nama hewan, dan 1 file lagi sudah spesifik nama file hewan yang sudah terdiri dengan jenis peliharaan,nama hewan,dan umur.
 fungsi *function21211* mengubah file yang masih memiliki nama file 2 hewan menjadi 1 hewan. Sehingga foto sudah terbagi menjadi 2.
-fungsi *function212111* & *pivot* mengubah namafile menjadi nama hewan peliharaan.
+fungsi *function212111* mengubah namafile menjadi nama hewan peliharaan & fungsi *pivot* memindahkan file pada fungsi *function212111* ke dalam direktori jenis hewan yang sesuai. Fungsi *function2121111* mengubah 1 file hewan tersisa yang masih di direktori petshop menjadi nama hewan peliharaan kemudian Fungsi *function21211111* memindahkan file tersebut ke direktori yang sesuai dengan jenis hewa peliharaan.
 
+### Soal 2E
+Membuat program C dimana program membuat sebuah file "keterangan.txt" yang berisi nama dan umur semua peliharaan dalam setiap folder jenis hewan peliharaan
+```c
+```
+```c
+```
 #### Kendala
 #### Screenshot jalannya progran
 

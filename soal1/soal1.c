@@ -14,47 +14,37 @@
 #include <glob.h>
 
 char path[20];
+short flag=0;
 
-void filter(){
-  int status,status1,status2;
-    if (0 == fork()) {
+void filter_prosess(char* sumber, char* tujuan)
+{
+    pid_t child_id;
+    int status;
+
+    child_id = fork();
+
+    if (child_id < 0)
+        exit(EXIT_FAILURE);
+
+    if (child_id == 0)
+    {
     glob_t globbuf_film;
     globbuf_film.gl_offs = 2;
-    glob("FILM/*.mp4", GLOB_DOOFFS, NULL, &globbuf_film);
-    glob("Fylm/", GLOB_DOOFFS | GLOB_APPEND, NULL, &globbuf_film);
+    glob(sumber, GLOB_DOOFFS, NULL, &globbuf_film);
+    glob(tujuan, GLOB_DOOFFS | GLOB_APPEND, NULL, &globbuf_film);
     globbuf_film.gl_pathv[0] = "cp";
     globbuf_film.gl_pathv[1] = "-r";
     execvp("cp", &globbuf_film.gl_pathv[0]);
+    exit(1);
     }
-    while ((wait(&status)) > 0);
-
-    if(0==fork()){
-    glob_t globbuf_foto;
-    globbuf_foto.gl_offs = 2;
-    glob("FOTO/*.jpg", GLOB_DOOFFS, NULL, &globbuf_foto);
-    glob("Pyoto/", GLOB_DOOFFS | GLOB_APPEND, NULL, &globbuf_foto);
-    globbuf_foto.gl_pathv[0] = "cp";
-    globbuf_foto.gl_pathv[1] = "-r";
-    execvp("cp", &globbuf_foto.gl_pathv[0]);
-    }
-    while ((wait(&status1)) > 0);
-    
-    if(0==fork()) {
-    glob_t globbuf;
-    globbuf.gl_offs = 2;
-    glob("MUSIK/*.mp3", GLOB_DOOFFS, NULL, &globbuf);
-    glob("Musyik/", GLOB_DOOFFS | GLOB_APPEND, NULL, &globbuf);
-    globbuf.gl_pathv[0] = "cp";
-    globbuf.gl_pathv[1] = "-r";
-    execvp("cp", &globbuf.gl_pathv[0]);
-    }
-    while ((wait(&status2)) > 0);
 }
 
 void hbd(){
   int status,status2;
   time_t t_now = time(NULL);
   struct tm waktu = *localtime(&t_now);
+
+while(wait(&status2)>0);
 
   while(strcmp(path,"09-04_22:22") !=0){
     sleep(2);
@@ -77,12 +67,31 @@ void hbd(){
     while(wait(&status)>0);
     char *argv_4[] = {"zip", "-rm", "Lopyu_Stevany", ".", "-x", "soal1*", "*.zip", NULL};
     execv("/bin/zip", argv_4);
-    exit(1);
+    flag=0;
   }
 }
+
+void wget_img(char* link, char* name)
+{
+    pid_t child_id;
+    int status;
+
+    child_id = fork();
+
+    if (child_id < 0)
+        exit(EXIT_FAILURE);
+
+    if (child_id == 0)
+    {
+      char *argv[] = {"wget", link, "-q", "-O", name, NULL};
+      execv("/usr/bin/wget", argv);
+      exit(1);
+    }
+}
+
 void download(){  
   pid_t child_id;
-  int i,status,status1,status2,status3,status4,status5,status6;
+  int i,j,status,status1,status2,status3,status4,status5,status6;
   child_id = fork();
 
   if (child_id < 0) {
@@ -91,24 +100,23 @@ void download(){
 
   if (child_id == 0) {
     // this is child
-    char *argv[3][8] = {    
-    {"/usr/bin/wget", "wget", "-bqc", "--no-check-certificate", "https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download", "-O", "Musik_for_Stevany.zip", 0},
-    {"/usr/bin/wget", "wget", "-bqc", "--no-check-certificate", "https://drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download", "-O", "Foto_for_Stevany.zip", 0},
-    {"/usr/bin/wget", "wget", "-bqc", "--no-check-certificate", "https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download", "-O", "Film_for_Stevany.zip", 0}};
+    char *argv[3][2] = {    
+    {"https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download", "Musik_for_Stevany.zip"},
+    {"https://drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download", "Foto_for_Stevany.zip"},
+    {"https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download", "Film_for_Stevany.zip"}};
     for(i = 0; i< 3;i++ ){
-      if (0 == fork()){continue;
-      while ((wait(&status1)) > 0);} 
-      execv("/usr/bin/wget", &argv[i][0]);
-    }         
+      wget_img(argv[i][0], argv[i][1]);
+      }
     }
    else{
     // this is parent
-    while ((wait(&status3)) > 0);
-    sleep(30);
+    // sleep(40);
     while ((wait(&status2)) > 0);
+    // kill(child_id, SIGKILL); 
+    // while ((wait(&status3)) > 0);
     pid_t child_id1;
     child_id1 = fork();
-
+    
   if (child_id1 < 0) {
     exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
   } 
@@ -139,14 +147,23 @@ void download(){
       }  
 
       if(child_id3==0){
-      filter();
+      char *argv_filter[3][2] = {    
+      {"FILM/*.mp4", "Fylm/"},
+      {"FOTO/*.jpg", "Pyoto/"},
+      {"MUSIK/*.mp3", "Musyik/"}};
+      for(i = 0; i< 3;i++ ){
+      filter_prosess(argv_filter[i][0], argv_filter[i][1]);
+      }
+      
       }else{
          while ((wait(&status6)) > 0);
         hbd();
+        // return;
       } 
     }    
     }
 }
+
 }
 int main() {
   pid_t pid, sid;
@@ -166,19 +183,15 @@ int main() {
   close(STDOUT_FILENO);
   close(STDERR_FILENO);
 
+  time_t my_time;
+  struct tm *timeinfo; 
   while(1){
-    int status,status1;
-  time_t t_now = time(NULL);
-  struct tm waktu = *localtime(&t_now);
-  strftime(path, sizeof(path)-1, "%d-%m_%H:%M", &waktu);
-  while(strcmp(path,"09-04_16:22")!=0)
-  {
-    sleep(2);
-    t_now = time(NULL);
-    waktu = *localtime(&t_now);
-    strftime(path, sizeof(path)-1, "%d-%m_%H:%M", &waktu);
+  time (&my_time);
+  timeinfo = localtime (&my_time);
+  if(timeinfo->tm_mday == 9 && timeinfo->tm_mon+1 == 4 && timeinfo->tm_hour == 16 && timeinfo->tm_min == 22 && flag==0){
+    download();
+    flag=1;
   }
-  download();
-  return 0;
+  sleep(2);
   }
-  }
+}

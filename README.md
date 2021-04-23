@@ -7,7 +7,274 @@
 
 # Pembahasan Soal
 ## Soal 1
+Soal 1 meminta untuk membuat program yang dijalankan secara otomatis oleh 1 script di latar belakang. Sehingga perlu menggunakan __Daemon__. Program yang dibuat terdiri dari berbagai fungsi untuk menjalankan setiap tugas yang diminta dari soal. Fungsi ```main()``` menjadi fungsi utama untuk menginisiasi Daemon dengan tambahan syarat, yaitu waktu 6 jam sebelum ulang tahun Stevany (__9 April jam 16.22__) dan waktu ulang tahunnya (__9 April jam 16.22__) untuk menjalankan berbagai fungsi yang ada
+
+### Soal 1A
+pada soal 1A, program membuat folder dengan nama Musyik untuk .mp3, Fylm untuk .mp4, dan Pyoto untuk .jpg
+
+```
+void folder()
+{
+    pid_t child_id;
+    int status;
+ 
+    child_id = fork();
+ 
+    if (child_id < 0)
+        exit(EXIT_FAILURE);
+ 
+    if (child_id == 0)
+    {
+      char *argv_1[] = {"mkdir", "-p", "Musyik", "Fylm", "Pyoto", NULL};
+      execv("/bin/mkdir", argv_1);
+    }
+}
+```
+
+Fungsi ```folder()``` pada program akan menjalankan perintah untuk membuat folder dengan nama Musyik, Fylm, dan Pyoto. Fungsi tersebut bekerja dengan cara spawnning procces dan proses yang dilakukan adalah membuat folder dengan ```mkdir``` dari bash
+```c
+char *argv_1[] = {"mkdir", "-p", "Musyik", "Fylm", "Pyoto", NULL};
+execv("/bin/mkdir", argv_1);
+```
+
+"foto output soal1A <img alt="Soal1A src="Foto/soal2a.jpg">"
+### Soal 1B
+pada soal 1B, program mendownload folder zip dari link yang telah disediakan pada soal
+```c
+void wget_zip(char* link, char* name)
+{
+    pid_t child_id;
+    int status;
+ 
+    child_id = fork();
+ 
+    if (child_id < 0)
+        exit(EXIT_FAILURE);
+ 
+    if (child_id == 0)
+    {
+      char *argv[] = {"wget", link, "-q", "-O", name, NULL};
+      execv("/usr/bin/wget", argv);
+    }
+}
+
+```
+Di fungsi ```download()``` terdapat list argumen yang berupa link dan nama file dari file yang akan didownload. Kemudian dilakukan perulangan sebanyak jumlah file yang akan didownload, yaitu tiga. 
+```c
+void download(){  
+...
+    char *argv[3][2] = {    
+    {"https://drive.google.com/uc?id=1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J&export=download", "Musik_for_Stevany.zip"},
+    {"https://drive.google.com/uc?id=1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD&export=download", "Foto_for_Stevany.zip"},
+    {"https://drive.google.com/uc?id=1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp&export=download", "Film_for_Stevany.zip"}};
+    for(i = 0; i< 3;i++ ){
+      wget_zip(argv[i][0], argv[i][1]);
+...
+```
+Dilanjutkan dengan fungsi ```wget_zip(link, nama file)``` yang akan spawnning proccess dan melakukan proses mendowload dari link yang diberikan dan menamai folder yang akan didowload dengan nama yang diberikan dengan ```wget``` dari bash
+```c
+char *argv[] = {"wget", link, "-q", "-O", name, NULL};
+execv("/usr/bin/wget", argv);
+```
+"foto output soal1A <img alt="Soal1B src="Foto/soal2b.jpg">"
+### Soal 1C
+pada soal 1C, program akan mengekstrak folder zip yang telah didownlod sebelumnya
+```c
+void unzip()
+{
+    pid_t child_id;
+    int status;
+ 
+    child_id = fork();
+ 
+    if (child_id < 0)
+        exit(EXIT_FAILURE);
+ 
+    if (child_id == 0)
+    {
+      char *argv_3[] = {"unzip", "*.zip", NULL};
+      execv("/usr/bin/unzip", argv_3); 
+    }
+}
+```
+Sebelum memanggil fungsi ```unzip()``` Di fungsi ```download()```, diperlukan delay dengan ```wait()``` dan ```sleep()``` untuk memberikan waktu tambahan untuk fungsi ```wget_zip()``` benar-benar selesai bekerja.
+```c
+void download(){  
+...
+    while ((wait(&status2)) > 0);
+    sleep(3);
+    unzip();
+...
+```
+Fungsi ```unzip()```bertujuan untuk mengekstrak folder yang telah didownload dengan menggunakan ```unzip``` dari bash. Dengan filename ```"*.zip"```, maka program akan mengekstak semua file yang miliki akhiran ```".zip"```
+```
+char *argv_3[] = {"unzip", "*.zip", NULL};
+execv("/usr/bin/unzip", argv_3); 
+```
+"foto output soal1A <img alt="Soal1C src="Foto/soal2c.jpg">"
+
+### Soal 1D
+pada soal 1D, program akan memindahkan isi file dari hasil ekstrak file ```.zip``` yang telah didownload. Namun, pemindahan file hanya berlaku bagi file dengan ekstensi ```.mp3``` yang akan dipindah ke folder ```Musyik```,```.jpg``` yang akan dipindah ke folder ```Pyoto```, dan ```.mp4```yang akan dipindah ke folder ```Pylm```.
+```c
+void filter_prosess(char* sumber, char* tujuan)
+{
+    pid_t child_id;
+    int status;
+ 
+    child_id = fork();
+ 
+    if (child_id < 0)
+        exit(EXIT_FAILURE);
+ 
+    if (child_id == 0)
+    {
+    glob_t globbuf_film;
+    globbuf_film.gl_offs = 2;
+    glob(sumber, GLOB_DOOFFS, NULL, &globbuf_film);
+    glob(tujuan, GLOB_DOOFFS | GLOB_APPEND, NULL, &globbuf_film);
+    globbuf_film.gl_pathv[0] = "cp";
+    globbuf_film.gl_pathv[1] = "-r";
+    execvp("cp", &globbuf_film.gl_pathv[0]);
+    }
+}
+```
+Di fungsi ```download()``` dilakukan perulangan sebanyak tiga kali untuk memindahkan isi file hasil ekstrak ke file yang dituju
+```c
+void download(){  
+...
+   while ((wait(&status5)) > 0);
+   char *argv_filter[3][2] = {    
+      {"FILM/*.mp4", "Fylm/"},
+      {"FOTO/*.jpg", "Pyoto/"},
+      {"MUSIK/*.mp3", "Musyik/"}};
+
+      for(i = 0; i< 3;i++ ){
+         filter_prosess(argv_filter[i][0], argv_filter[i][1]);
+      }
+...
+```
+Fungsi ```wait()``` bertujuan untukmemberikan waktu tambahan untuk fungsi ```folder()``` benar-benar selesai bekerja.
+Di bahasa C, _wildcard_ pada linux tidak dapat dipakai untuk mencari file dengan ciri tertentu. Sehingga perlu tambahan library ```#include <glob.h>``` dan denngan struct ```glob_t```  yang dapat memudahkan untuk melakukan pencarian file layaknya menggunakan _wildcard_.
+```c
+    glob_t globbuf_film;
+    globbuf_film.gl_offs = 2;
+    glob(sumber, GLOB_DOOFFS, NULL, &globbuf_film);
+    glob(tujuan, GLOB_DOOFFS | GLOB_APPEND, NULL, &globbuf_film);
+    globbuf_film.gl_pathv[0] = "cp";
+    globbuf_film.gl_pathv[1] = "-r";
+    execvp("cp", &globbuf_film.gl_pathv[0]);
+```
+"foto output soal1A <img alt="Soal1D src="Foto/soal2d.jpg">"
+### Soal 1E
+pada soal 1E, program dibuat untuk menjalan seluruh perintah diatas, soal 1A-D, secara otomatis 6 jam sebelum ulang tahun Stevany.
+```c
+Ini masih direvisi :(
+```
+Untuk memastikan program berjalan tepat sebelum 6 jam sebelum ulang tahun Stevany, maka dengan library ```#include <time.h>```, program dapat menggunakan  ```time_t``` untuk memperoleh waktu saat program berjalan dan ```struct tm``` untuk memudahkan memeriksa nilai bulan dari ```tm_mon+1```, hari dari ```tm_mday```, jam dari ```tm_mhour```, menit dari ```tm_min```, detik dari ```tm_sec```. Dari nilai tersebut maka dapat dilakukan pengecekan waktu selama program berjalan.
+```c
+int main(){
+...
+ time_t my_time;
+  struct tm *timeinfo; 
+  while(1){
+  time (&my_time);
+  timeinfo = localtime (&my_time);
+  if(timeinfo->tm_mday == 9 && timeinfo->tm_mon+1 == 4 && timeinfo->tm_hour == 16 && timeinfo->tm_min == 21 && timeinfo->tm_sec == 59){
+    ...
+    }
+  }
+...
+}
+```
+Jika waktu pada sistem sesuai dengan syarat yang diminta (__jam 16:22__), maka program akan lanjut ke fungsi ```download()``` yang berisi perintah yang telah ditulis pada soal 1A-D.
+```c
+int main(){
+...
+if(timeinfo->tm_mday == 9 && timeinfo->tm_mon+1 == 4 && timeinfo->tm_hour == 1 6&& timeinfo->tm_min == 21 && timeinfo->tm_sec == 59){
+   download();
+   sleep(3);
+   }
+...
+}
+```
+Fungsi ```sleep(3)``` bertujuan untuk menghindari pemanggilan fungsi ```download`()`` yang mungkin terjadi berkali-kali dengan memberi jeda pada program.
+
+"foto output soal1A <img alt="Soal1E src="Foto/soal2e.jpg">"
+### Soal 1F
+pada soal 1F, program dibuat untuk men-zip semua folder(Fylm, Pyoto, Musyik) dengan nama __Lopyu_Stevany.zip__ dan menghapus semua folder.
+```c
+void hbd(){
+  int status,status2;
+  time_t t_now = time(NULL);
+  struct tm waktu = *localtime(&t_now);
+ 
+while(wait(&status2)>0);
+ 
+  while(strcmp(path,"09-04_22:22") !=0){
+    sleep(2);
+    t_now = time(NULL);
+    waktu = *localtime(&t_now);
+    strftime(path, sizeof(path)-1, "%d-%m_%H:%M", &waktu);
+    }
+ 
+  pid_t child_id;
+  child_id = fork();
+ 
+  if (child_id < 0) {
+    exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+   } 
+ 
+  if (child_id == 0) {
+    char *argv_6[] = {"rm","-rf", "MUSIK", "FOTO", "FILM", NULL};
+    execv("/bin/rm", argv_6);
+  } else{
+    while(wait(&status)>0);
+    char *argv_4[] = {"zip", "-rm", "Lopyu_Stevany", ".", "-x", "soal1*", "*.zip", NULL};
+    execv("/bin/zip", argv_4);
+  }
+}
+```
+dengan ```time_t``` untuk memperoleh waktu saat program berjalan dan ```struct tm``` untuk memudahkan memeriksa nilai bulan, hari, jam, dan menit. Selama waktu sistem belum menunjukan jam 22:22, maka akan dilakukan looping dengan while dan sleep selama 2 detik untuk menunggu waktu hingga jam 22:22. Cara membandikan waktu pada sistem dengan waktu yang dituju dengan menggunakan ```strcmp()``` karena waktu sistem disimpan dalam string dengan menggunakan ```strftime()```.
+```c
+void hbd(){ 
+...
+  time_t t_now = time(NULL);
+  struct tm waktu = *localtime(&t_now);
+  while(strcmp(path,"09-04_22:22") !=0){
+    sleep(2);
+    t_now = time(NULL);
+    waktu = *localtime(&t_now);
+    strftime(path, sizeof(path)-1, "%d-%m_%H:%M", &waktu);
+    }
+...
+}
+```
+Jika waktu telah menunjukan jam 22:22, maka looping ```while``` akan berhenti dan melanjutkan fungsi ```hbd()```, yaitu spawning proccess untuk menghapus seluruh folder dengan ```rm -rf```
+```c
+void hbd(){ 
+...
+if (child_id == 0) {
+    char *argv_6[] = {"rm","-rf", "MUSIK", "FOTO", "FILM", NULL};
+    execv("/bin/rm", argv_6);
+  }
+...
+}
+```
+dan men-zip seluruh isi folder  dan menghapus yang telah di-zip dengan ```zip -rm```. untuk argumen zip ini diberikan tambahan pengecualian agar tidak men-zip file _source code_ dan file dengan ekstensi .zip dengan ```-x```
+```c
+void hbd(){ 
+...
+else{
+    while(wait(&status)>0);
+    char *argv_4[] = {"zip", "-rm", "Lopyu_Stevany", ".", "-x", "soal1*", "*.zip", NULL};
+    execv("/bin/zip", argv_4);
+  }
+...
+}
+```
+"foto output soal1A <img alt="Soal1F src="Foto/soal2f.jpg">"
 #### Kendala
+Program dapat berjalan sesuai dengan soal yang diberikan. Namun, Setelah selesai membuat Lopyu_Stevany.zip, program tidak berjalan lagi. 
 #### Screenshot jalannya progran
 
 ## Soal 2

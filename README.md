@@ -267,11 +267,11 @@ else{
 #### Kendala
 Program dapat berjalan sesuai dengan soal yang diberikan. Namun, Setelah selesai membuat Lopyu_Stevany.zip, program tidak berjalan lagi. 
 #### Screenshot jalannya progran
-#### Soal 1A-D
+__Soal 1A-D
 <img alt="soal1A-D" src="Foto/soal1A-D.JPG">
-#### Soal 1F
+Soal 1F_
 <img alt="soal1F" src="Foto/1F.JPG">
-#### Isi folder
+Isi folder__
 <img alt="isiFolder" src="Foto/isi.JPG">
 
 ## Soal 2

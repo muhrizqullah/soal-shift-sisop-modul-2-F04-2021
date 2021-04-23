@@ -268,11 +268,11 @@ else{
 Program dapat berjalan sesuai dengan soal yang diberikan. Namun, Setelah selesai membuat Lopyu_Stevany.zip, program tidak berjalan lagi. 
 #### Screenshot jalannya progran
 #### Soal 1A-D
-<img alt="soal1Asrc="Foto/soal1A-D.jpg">"
+<img alt="soal1A-D" src="Foto/soal1A-D.jpg">
 #### Soal1F
-<img alt="soal1B src="Foto/1F.jpg">
+<img alt="soal1F" src="Foto/1F.jpg">
 #### Isi folder
-<img alt="soal1C src="Foto/isi.jpg">"
+<img alt="isiFolder" src="Foto/isi.jpg">
 
 ## Soal 2
 ### Soal 2A

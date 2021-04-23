@@ -36,8 +36,6 @@ Fungsi ```folder()``` pada program akan menjalankan perintah untuk membuat folde
 char *argv_1[] = {"mkdir", "-p", "Musyik", "Fylm", "Pyoto", NULL};
 execv("/bin/mkdir", argv_1);
 ```
-
-"foto output soal1A <img alt="Soal1A src="Foto/soal2a.jpg">"
 ### Soal 1B
 pada soal 1B, program mendownload folder zip dari link yang telah disediakan pada soal
 ```c
@@ -76,7 +74,6 @@ Dilanjutkan dengan fungsi ```wget_zip(link, nama file)``` yang akan spawnning pr
 char *argv[] = {"wget", link, "-q", "-O", name, NULL};
 execv("/usr/bin/wget", argv);
 ```
-"foto output soal1A <img alt="Soal1B src="Foto/soal2b.jpg">"
 ### Soal 1C
 pada soal 1C, program akan mengekstrak folder zip yang telah didownlod sebelumnya
 ```c
@@ -111,8 +108,6 @@ Fungsi ```unzip()```bertujuan untuk mengekstrak folder yang telah didownload den
 char *argv_3[] = {"unzip", "*.zip", NULL};
 execv("/usr/bin/unzip", argv_3); 
 ```
-"foto output soal1A <img alt="Soal1C src="Foto/soal2c.jpg">"
-
 ### Soal 1D
 pada soal 1D, program akan memindahkan isi file dari hasil ekstrak file ```.zip``` yang telah didownload. Namun, pemindahan file hanya berlaku bagi file dengan ekstensi ```.mp3``` yang akan dipindah ke folder ```Musyik```,```.jpg``` yang akan dipindah ke folder ```Pyoto```, dan ```.mp4```yang akan dipindah ke folder ```Pylm```.
 ```c
@@ -164,7 +159,6 @@ Di bahasa C, _wildcard_ pada linux tidak dapat dipakai untuk mencari file dengan
     globbuf_film.gl_pathv[1] = "-r";
     execvp("cp", &globbuf_film.gl_pathv[0]);
 ```
-"foto output soal1A <img alt="Soal1D src="Foto/soal2d.jpg">"
 ### Soal 1E
 pada soal 1E, program dibuat untuk menjalan seluruh perintah diatas, soal 1A-D, secara otomatis 6 jam sebelum ulang tahun Stevany.
 ```c
@@ -272,10 +266,21 @@ else{
 ...
 }
 ```
-"foto output soal1A <img alt="Soal1F src="Foto/soal2f.jpg">"
 #### Kendala
 Program dapat berjalan sesuai dengan soal yang diberikan. Namun, Setelah selesai membuat Lopyu_Stevany.zip, program tidak berjalan lagi. 
 #### Screenshot jalannya progran
+#### Soal1A
+"foto output soal1A <img alt="soal1Asrc="Foto/soal2a.jpg">"
+#### Soal1B
+"foto output soal1B <img alt="soal1B src="Foto/soal2b.jpg">"
+#### Soal1C
+"foto output soal1C <img alt="soal1C src="Foto/soal2c.jpg">"
+#### Soal1D
+"foto output soal1D <img alt="soal1D src="Foto/soal2d.jpg">"
+#### Soal1E
+"foto output soal1E <img alt="soal1E src="Foto/soal2e.jpg">"
+#### Soal1F
+"foto output soal1F <img alt="Soal1F src="Foto/soal2f.jpg">"
 
 ## Soal 2
 ### Soal 2A

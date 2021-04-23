@@ -192,8 +192,6 @@ if(timeinfo->tm_mday == 9 && timeinfo->tm_mon+1 == 4 && timeinfo->tm_hour == 1 6
 }
 ```
 Fungsi ```sleep(3)``` bertujuan untuk menghindari pemanggilan fungsi ```download`()`` yang mungkin terjadi berkali-kali dengan memberi jeda pada program.
-
-"foto output soal1A <img alt="Soal1E src="Foto/soal2e.jpg">"
 ### Soal 1F
 pada soal 1F, program dibuat untuk men-zip semua folder(Fylm, Pyoto, Musyik) dengan nama __Lopyu_Stevany.zip__ dan menghapus semua folder.
 ```c

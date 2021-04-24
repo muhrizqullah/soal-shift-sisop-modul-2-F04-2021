@@ -127,16 +127,15 @@ void download(){
       wget_zip(argv[i][0], argv[i][1]);
     }
 
-    while ((wait(&status2)) > 0);
+    while ((wait(&status)) > 0);
     sleep(3);
 
     unzip();
 
-    while ((wait(&status3)) > 0);
-
+    while ((wait(&status1)) > 0);
     folder();
 
-      while ((wait(&status5)) > 0);
+      while ((wait(&status2)) > 0);
  
       char *argv_filter[3][2] = {    
       {"FILM/*.mp4", "Fylm/"},
@@ -145,10 +144,9 @@ void download(){
       for(i = 0; i< 3;i++ ){
       filter_prosess(argv_filter[i][0], argv_filter[i][1]);
       }
-      
-         while ((wait(&status6)) > 0);
+        while ((wait(&status3)) > 0);
         hbd();
-
+        while ((wait(&status4)) > 0);
       } 
 
 int main() {

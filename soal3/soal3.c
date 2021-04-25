@@ -156,7 +156,6 @@ int main(int argc, char **argv)
     killer = fopen("killer.sh", "w");
     if (strcmp(argv[1], "-z") == 0)
     {
-        //fprintf(killer, "#!/bin/bash\narr=($(ps -aux | grep './soal3' | awk '{ print $2 }'))\nfor i in \"${arr[@]}\"\ndo\n\tkill -9 $i\ndone\n\nrm \"$0\"");
         fprintf(killer, "#!/bin/bash\nkillall soal3\nrm \"$0\"");
     }
     else if (strcmp(argv[1], "-x") == 0)

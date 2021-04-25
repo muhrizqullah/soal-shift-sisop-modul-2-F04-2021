@@ -858,7 +858,7 @@ FILE *killer;
     killer = fopen("killer.sh", "w");
     if (strcmp(argv[1], "-z") == 0)
     {
-        fprintf(killer, "#!/bin/bash\narr=($(ps -aux | grep './soal3' | awk '{ print $2 }'))\nfor i in ${arr[@]}\ndo\nkill -9 $i\ndone\nrm \"$0\"");
+        fprintf(killer, "#!/bin/bash\nkillall soal3\nrm \"$0\"");
     }
     else if (strcmp(argv[1], "-x") == 0)
     {
@@ -870,14 +870,10 @@ FILE *killer;
 Pada baris kode ini akan dibuat file killer.sh untuk menghentikan proses yang ada sesuai dengan argumen yang dipilih.
 ```bash
 #!/bin/bash
-arr=($(ps -aux | grep './soal3' | awk '{ print $2 }'))
-for i in ${arr[@]}
-do
-    kill -9 $i
-done
+killall soal3
 rm "$0"
 ```
-Pada saat argumen yang diberikan adalah `-z` maka file *killer.sh* yang dibuat adalah seperti diatas. dimana akan mencari PID terlebih dahulu menggunakan `ps -aux` dan disimpan didalam array. Setelah itu akan dilakukan `kill -9` untuk setiap PID yang didapatkan. Selanjutnya akan menghapus file *killer.sh* menggunakan `rm "$0"`.
+Pada saat argumen yang diberikan adalah `-z` maka file *killer.sh* yang dibuat adalah seperti diatas. dimana akan menggunakan killall untuk seluruh PID dengan output soal3.
 ```bash
 #!/bin/bash
 arr=($(ps -aux | grep './soal3' | awk '{ print $2 }'))
